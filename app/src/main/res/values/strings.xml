@@ -300,5 +300,7 @@
     <string name="privacy_dialog_content">Release Date: May 19, 2022\nEffective Date: May 19, 2022\n\n<b>Basic Statement</b>\n\nThis app will not collect any of your private information, it will only query the following information when necessary:\n\n · Read the list of installed apps; only used when you choose to block automatic input, this information is checked completely locally, and its results will not be uploaded to anywhere. \n\n<b>Requested permissions</b>\n\nThis app does not request any permissions. \n\n<b>Updates to this policy</b>\n\nWe may update this privacy policy from time to time, you can check the latest version of this privacy policy at any time by opening this page.</string>
     <string name="privacy_dialog_cancel">Refuse</string>
     <string name="privacy_dialog_confirm">Accept</string>
+    <string name="pref_webhook">WEBHOOK</string>
+    <string name="pref_custom">CUSTOM</string>
     <!-- privacy policy end -->
 </resources>

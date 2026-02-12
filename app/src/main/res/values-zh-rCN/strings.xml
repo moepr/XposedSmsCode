@@ -299,5 +299,7 @@
     <string name="privacy_dialog_content">发布日期：2022年5月19日\n生效日期：2022年5月19日\n\n<b>基本声明</b>\n\n本应用不会收集您任何隐私信息，它仅会在必要时查询以下与您个人信息无关的内容：\n\n· 读取安装的应用列表；仅在您选择需要屏蔽自动输入时使用，这些信息完全是在本地检查，它的结果不会上传到任何地方。\n\n<b>申请的权限</b>\n\n本应用不会申请任何权限。\n\n<b>本政策的更新</b>\n\n我们可能会不定期更新该本隐私政策，您可以随时打开此页面查询最新版本的隐私政策。</string>
     <string name="privacy_dialog_cancel">拒绝</string>
     <string name="privacy_dialog_confirm">同意和接受</string>
+    <string name="pref_webhook">WEBHOOK</string>
+    <string name="pref_custom">自定义</string>
     <!-- privacy policy end -->
 </resources>

@@ -27,6 +27,7 @@
 
     <string name="pref_smscode_keywords">pref_smscode_keywords</string>
     <string name="pref_smscode_test">pref_smscode_test</string>
+    <string name="pref_smscode_webhook">pref_smscode_webhook</string>
     <string name="pref_code_rules">pref_code_rules</string>
 
     <string name="pref_experimental">pref_experimental</string>

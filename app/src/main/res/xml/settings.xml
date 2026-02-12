@@ -159,6 +159,16 @@
             android:title="@string/pref_smscode_test_title"/>
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/pref_custom">
+        <Preference
+            android:icon="@drawable/ic_rules"
+            android:key="@string/pref_smscode_webhook"
+            android:persistent="false"
+            android:positiveButtonText="@string/pref_webhook"
+            android:summary="@string/pref_webhook"
+            android:title="@string/pref_webhook"/>
+    </PreferenceCategory>
+
     <PreferenceCategory
         android:key="@string/pref_experimental"
         android:title="@string/pref_experimental_title">

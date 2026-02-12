@@ -7,6 +7,7 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -103,7 +104,7 @@ public class SettingsFragment extends BasePreferenceFragment implements
             Preference enablePref = findPreference(PrefConst.KEY_ENABLE);
             enablePref.setSummary(R.string.pref_enable_summary_alt);
         }
-
+        findPreference(PrefConst.KEY_WEBHOOK).setOnPreferenceClickListener(this);
         findPreference(PrefConst.KEY_HIDE_LAUNCHER_ICON).setOnPreferenceChangeListener(this);
         findPreference(PrefConst.KEY_CHOOSE_THEME).setOnPreferenceClickListener(this);
         // general group end
@@ -195,6 +196,9 @@ public class SettingsFragment extends BasePreferenceFragment implements
             mPresenter.checkUpdate();
         } else if(PrefConst.KEY_PRIVACY_POLICY.equals(key)) {
             showPrivacyPolicy();
+        } else if (PrefConst.KEY_WEBHOOK.equals(key)) {
+            //showSmsCodeTestDialog();
+            Toast.makeText(mActivity, "click webhook button", Toast.LENGTH_LONG).show();
         } else {
             return false;
         }
