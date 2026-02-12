@@ -33,6 +33,8 @@ public interface SettingsContract {
 
         void performSmsCodeTest(String msgBody);
 
+        void performSmsCodeWebhook(String msgBody);
+
         void joinQQGroup();
 
         void showSourceProject();

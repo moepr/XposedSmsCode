@@ -26,6 +26,7 @@ import com.tianma.xsmscode.common.preference.ResetEditPreferenceDialogFragCompat
 import com.tianma.xsmscode.common.utils.ModuleUtils;
 import com.tianma.xsmscode.common.utils.PackageUtils;
 import com.tianma.xsmscode.common.utils.SPUtils;
+import com.tianma.xsmscode.common.utils.SmsCodeUtils;
 import com.tianma.xsmscode.common.utils.SnackbarHelper;
 import com.tianma.xsmscode.common.utils.XLog;
 import com.tianma.xsmscode.data.db.entity.ApkVersion;
@@ -42,6 +43,7 @@ import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasAndroidInjector;
 import dagger.android.support.AndroidSupportInjection;
+import de.robv.android.xposed.XSharedPreferences;
 
 /**
  * 首选项Fragment
@@ -197,8 +199,8 @@ public class SettingsFragment extends BasePreferenceFragment implements
         } else if(PrefConst.KEY_PRIVACY_POLICY.equals(key)) {
             showPrivacyPolicy();
         } else if (PrefConst.KEY_WEBHOOK.equals(key)) {
-            //showSmsCodeTestDialog();
-            Toast.makeText(mActivity, "click webhook button", Toast.LENGTH_LONG).show();
+            showSmsCodeWebhookDialog();
+            //Toast.makeText(mActivity, "click webhook button", Toast.LENGTH_LONG).show();
         } else {
             return false;
         }
@@ -244,6 +246,18 @@ public class SettingsFragment extends BasePreferenceFragment implements
                 .title(R.string.pref_smscode_test_title)
                 .input(R.string.sms_content_hint, 0, true,
                         (dialog, input) -> mPresenter.performSmsCodeTest(input.toString()))
+                .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE)
+                .negativeText(R.string.cancel)
+                .show();
+    }
+
+    private void showSmsCodeWebhookDialog() {
+        XSharedPreferences preferences = new XSharedPreferences(BuildConfig.APPLICATION_ID, PrefConst.PREF_NAME);
+        String webhookUrl = preferences.getString(PrefConst.KEY_WEBHOOK, "");
+        new MaterialDialog.Builder(mActivity)
+                .title(R.string.pref_webhook)
+                .input(R.string.pref_webhook, 0, true,
+                        (dialog, input) -> mPresenter.performSmsCodeWebhook(input.toString()))
                 .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE)
                 .negativeText(R.string.cancel)
                 .show();

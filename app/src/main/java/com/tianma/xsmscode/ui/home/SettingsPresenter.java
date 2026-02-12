@@ -116,6 +116,22 @@ public class SettingsPresenter implements SettingsContract.Presenter {
     }
 
     @Override
+    public void performSmsCodeWebhook(String msgBody) {
+        Disposable disposable = Observable
+                .create((ObservableOnSubscribe<String>) emitter -> {
+                    String code = TextUtils.isEmpty(msgBody) ? "" :
+                            SmsCodeUtils.parseSmsCodeIfExists(mContext, msgBody, false);
+                    emitter.onNext(code);
+                    emitter.onComplete();
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(code -> mView.showSmsCodeTestResult(code),
+                        throwable -> mView.showSmsCodeTestResult(""));
+        mCompositeDisposable.add(disposable);
+    }
+
+    @Override
     public void joinQQGroup() {
         PackageUtils.joinQQGroup(mContext);
     }
