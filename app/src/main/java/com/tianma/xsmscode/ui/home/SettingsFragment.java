@@ -25,6 +25,7 @@ import com.tianma.xsmscode.common.preference.ResetEditPreference;
 import com.tianma.xsmscode.common.preference.ResetEditPreferenceDialogFragCompat;
 import com.tianma.xsmscode.common.utils.ModuleUtils;
 import com.tianma.xsmscode.common.utils.PackageUtils;
+import com.tianma.xsmscode.common.utils.PreferencesUtils;
 import com.tianma.xsmscode.common.utils.SPUtils;
 import com.tianma.xsmscode.common.utils.SmsCodeUtils;
 import com.tianma.xsmscode.common.utils.SnackbarHelper;
@@ -252,15 +253,16 @@ public class SettingsFragment extends BasePreferenceFragment implements
     }
 
     private void showSmsCodeWebhookDialog() {
-        XSharedPreferences preferences = new XSharedPreferences(BuildConfig.APPLICATION_ID, PrefConst.PREF_NAME);
-        String webhookUrl = preferences.getString(PrefConst.KEY_WEBHOOK, "");
-        new MaterialDialog.Builder(mActivity)
-                .title(R.string.pref_webhook)
-                .input(R.string.pref_webhook, 0, true,
-                        (dialog, input) -> mPresenter.performSmsCodeWebhook(input.toString()))
-                .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE)
-                .negativeText(R.string.cancel)
-                .show();
+        Context context = getContext();
+        String webhookUrl = PreferencesUtils.getString(context, PrefConst.KEY_WEBHOOK, "");
+        MaterialDialog.Builder builder = new MaterialDialog.Builder(mActivity);
+        builder.title(R.string.pref_webhook);
+        builder.content("例 http://example.com/receive?smscode=#smscode#");
+        builder.input("please input webhook url...", webhookUrl, true,
+                        (dialog, input) -> mPresenter.performSmsCodeWebhook(context, input.toString()));
+        builder.inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+        builder.negativeText(R.string.cancel);
+        builder.show();
     }
 
     @Override

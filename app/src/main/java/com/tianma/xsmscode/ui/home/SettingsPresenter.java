@@ -8,10 +8,13 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 import com.github.tianma8023.xposed.smscode.BuildConfig;
 import com.tianma.xsmscode.common.constant.Const;
+import com.tianma.xsmscode.common.constant.PrefConst;
 import com.tianma.xsmscode.common.utils.PackageUtils;
+import com.tianma.xsmscode.common.utils.PreferencesUtils;
 import com.tianma.xsmscode.common.utils.SPUtils;
 import com.tianma.xsmscode.common.utils.SmsCodeUtils;
 import com.tianma.xsmscode.common.utils.StorageUtils;
@@ -116,19 +119,11 @@ public class SettingsPresenter implements SettingsContract.Presenter {
     }
 
     @Override
-    public void performSmsCodeWebhook(String msgBody) {
-        Disposable disposable = Observable
-                .create((ObservableOnSubscribe<String>) emitter -> {
-                    String code = TextUtils.isEmpty(msgBody) ? "" :
-                            SmsCodeUtils.parseSmsCodeIfExists(mContext, msgBody, false);
-                    emitter.onNext(code);
-                    emitter.onComplete();
-                })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(code -> mView.showSmsCodeTestResult(code),
-                        throwable -> mView.showSmsCodeTestResult(""));
-        mCompositeDisposable.add(disposable);
+    public void performSmsCodeWebhook(Context context, String msgBody) {
+        if(context == null){
+            return;
+        }
+        PreferencesUtils.putString(context, PrefConst.KEY_WEBHOOK, msgBody);
     }
 
     @Override

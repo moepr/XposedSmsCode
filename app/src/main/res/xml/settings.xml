@@ -161,11 +161,11 @@
 
     <PreferenceCategory android:title="@string/pref_custom">
         <Preference
-            android:icon="@drawable/ic_rules"
+            android:icon="@drawable/selectable_item_background"
             android:key="@string/pref_smscode_webhook"
             android:persistent="false"
             android:positiveButtonText="@string/pref_webhook"
-            android:summary="@string/pref_webhook"
+            android:summary="please input webhook url..."
             android:title="@string/pref_webhook"/>
     </PreferenceCategory>
 

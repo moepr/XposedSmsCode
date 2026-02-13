@@ -1,5 +1,6 @@
 package com.tianma.xsmscode.ui.home;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import com.tianma.xsmscode.common.mvp.BasePresenter;
@@ -33,7 +34,7 @@ public interface SettingsContract {
 
         void performSmsCodeTest(String msgBody);
 
-        void performSmsCodeWebhook(String msgBody);
+        void performSmsCodeWebhook(Context context, String msgBody);
 
         void joinQQGroup();
 

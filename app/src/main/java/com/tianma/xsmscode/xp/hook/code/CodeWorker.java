@@ -21,6 +21,7 @@ import com.tianma.xsmscode.xp.hook.code.action.impl.OperateSmsAction;
 import com.tianma.xsmscode.xp.hook.code.action.impl.RecordSmsAction;
 import com.tianma.xsmscode.xp.hook.code.action.impl.SmsParseAction;
 import com.tianma.xsmscode.xp.hook.code.action.impl.ToastAction;
+import com.tianma.xsmscode.xp.hook.code.action.impl.WebhookAction;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -90,6 +91,9 @@ public class CodeWorker {
 
         // 复制到剪切板 Action
         mUIHandler.post(new CopyToClipboardAction(mPluginContext, mPhoneContext, smsMsg, xsp));
+
+        //webhook回调
+        mUIHandler.post(new WebhookAction(mPluginContext, mPhoneContext, smsMsg, xsp));
 
         // 显示Toast Action
         mUIHandler.post(new ToastAction(mPluginContext, mPhoneContext, smsMsg, xsp));
