@@ -2,6 +2,8 @@ package com.tianma.xsmscode.xp.hook.code.action.impl;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.widget.Toast;
 
 import com.tianma.xsmscode.common.constant.PrefConst;
@@ -21,6 +23,11 @@ import okhttp3.Response;
  */
 public class WebhookAction extends RunnableAction {
 
+    // 主线程Handler
+    private final Handler mMainHandler = new Handler(Looper.getMainLooper());
+    // OkHttpClient 类内复用（低频请求足够，无需单例）
+    private final OkHttpClient mOkHttpClient = new OkHttpClient();
+
     public WebhookAction(Context pluginContext, Context phoneContext, SmsMsg smsMsg, XSharedPreferences xsp) {
         super(pluginContext, phoneContext, smsMsg, xsp);
     }
@@ -29,21 +36,39 @@ public class WebhookAction extends RunnableAction {
     public Bundle action() {
         String webhook = xsp.getString(PrefConst.KEY_WEBHOOK, "");
         if (webhook !=null && !webhook.isEmpty()) {
-            webhook = webhook.replace("#smscode#",mSmsMsg.getSmsCode());
-            OkHttpClient okHttpClient = new OkHttpClient();
-            HttpUrl httpUrl = HttpUrl.parse(webhook).newBuilder().build();
-            Request request = new Request.Builder().url(httpUrl).build(); // GET 方法默认，无需显式写 .get()
-            try (Response response = okHttpClient.newCall(request).execute()) {
-                if (response.isSuccessful()) {
-                    String result = response.body().string();
-                    Toast.makeText(mPhoneContext, "接口返回：" + result, Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(mPhoneContext, "请求失败，状态码：" + response.code(), Toast.LENGTH_LONG).show();
+            // 替换短信验证码占位符
+            webhook = webhook.replace("#smscode#", mSmsMsg.getSmsCode());
+            // 网络请求放到子线程执行，避免主线程崩溃
+            String finalWebhook = webhook;
+            new Thread(() -> {
+                HttpUrl httpUrl = HttpUrl.parse(finalWebhook);
+                if (httpUrl == null) {
+                    showToast("Webhook地址格式错误");
+                    return;
                 }
-            } catch (IOException e) {
-                Toast.makeText(mPhoneContext, e.toString(), Toast.LENGTH_LONG).show();
-            }
+                Request request = new Request.Builder().url(httpUrl).build();
+                try (Response response = mOkHttpClient.newCall(request).execute()) {
+                    if (response.isSuccessful()) {
+                        String result = response.body() != null ? response.body().string() : "无返回内容";
+                        showToast("接口返回：" + result);
+                    } else {
+                        showToast("请求失败，状态码：" + response.code());
+                    }
+                } catch (IOException e) {
+                    showToast("请求异常：" + (e.getMessage() != null ? e.getMessage() : "网络错误"));
+                }
+            }).start();
         }
         return null;
+    }
+
+    /**
+     * 封装Toast方法，确保在主线程显示
+     */
+    private void showToast(String msg) {
+        mMainHandler.post(() -> {
+            Context safeContext = mPhoneContext.getApplicationContext();
+            Toast.makeText(safeContext, msg, Toast.LENGTH_LONG).show();
+        });
     }
 }
